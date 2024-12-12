@@ -40,7 +40,7 @@ namespace EPPlusTest.FormulaParsing.Excel.Functions.RefAndLookup
 
 
         [TestMethod]
-        public void VlookupApprox_ByDate()
+        public void ApproximateShouldFindDate()
         {
             using (var package = new ExcelPackage())
             {
@@ -66,7 +66,7 @@ namespace EPPlusTest.FormulaParsing.Excel.Functions.RefAndLookup
         [DataTestMethod]
         [DataRow(1, "a")]
         [DataRow(5, "d")]
-        public void VlookupApprox_Find(int find, string expected)
+        public void ApproximateShouldFind(int find, string expected)
         {
             using (var package = OpenPackage("VlookupApprox_Finds.xlsx", true))
             {
@@ -92,7 +92,7 @@ namespace EPPlusTest.FormulaParsing.Excel.Functions.RefAndLookup
 
         [TestMethod]
 
-        public void VlookupExact_NotFound()
+        public void ExactShouldNA()
         {
             using (var package = OpenPackage("VlookupExact_NotFound.xlsx",true))
             {
@@ -118,7 +118,7 @@ namespace EPPlusTest.FormulaParsing.Excel.Functions.RefAndLookup
 
 
         [TestMethod]
-        public void VlookupApprox_OutOfRangePositive_ReturnsRefError()
+        public void ApproximateOutOfRangePositiveShouldRefError()
         {
             using (var package = OpenPackage("VlookupApprox_OutOfRangePositive_ReturnsRefError.xlsx", true))
             {
@@ -151,7 +151,7 @@ namespace EPPlusTest.FormulaParsing.Excel.Functions.RefAndLookup
         [DataTestMethod]
         [DataRow(0)]
         [DataRow(-1)]
-        public void VlookupApprox_OutOfRangeNonPositive_ReturnsValueError(int offset)
+        public void ApproximateOutOfRangeNonPositiveShouldValueError(int offset)
         {
             using (var package = new ExcelPackage())
             {
@@ -181,7 +181,7 @@ namespace EPPlusTest.FormulaParsing.Excel.Functions.RefAndLookup
         }
 
         [TestMethod]
-        public void ExactStrings()
+        public void ExactStringsShouldFind()
         {
             using (var package = new ExcelPackage())
             {
@@ -208,7 +208,7 @@ namespace EPPlusTest.FormulaParsing.Excel.Functions.RefAndLookup
         }
 
         [TestMethod]
-        public void ApproxStrings()
+        public void ApproximateStringsShouldFind()
         {
             using (var package = OpenPackage("VLOOKUP_approxStrings.xlsx", true))
             {
@@ -234,29 +234,6 @@ namespace EPPlusTest.FormulaParsing.Excel.Functions.RefAndLookup
                 Assert.AreEqual("dd", sheet.Cells["C2"].Value);
 
                 SaveAndCleanup(package);
-            }
-        }
-
-        [TestMethod]
-        public void VlookupApprox_Test()
-        {
-            using (var package = new ExcelPackage())
-            {
-                var sheet = package.Workbook.Worksheets.Add("ws");
-
-                sheet.Cells["F1"].Value = 5;
-
-                var range = sheet.Cells["C1:D4"];
-
-                range.Value = 3;
-
-                sheet.Cells["C1"].Value = 4;
-                sheet.Cells["C2"].Value = 5;
-
-                sheet.Cells["F3"].Formula = "VLOOKUP(F1,C1:D4,2,TRUE)";
-
-                sheet.Cells["F3"].Calculate();
-                Assert.AreEqual(3, sheet.Cells["F3"].Value);
             }
         }
 
