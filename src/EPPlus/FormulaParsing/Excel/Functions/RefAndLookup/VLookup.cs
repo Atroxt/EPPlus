@@ -78,14 +78,15 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup
             }
             else
             {
-                if (arguments[0].DataType == DataType.String)
-                {
+                //Handle mixed types for rangeLookup here?
+                //if (arguments[0].DataType == DataType.String)
+                //{
 
-                }
-                else
-                {
+                //}
+                //else
+                //{
 
-                }
+                //}
 
                 index = LookupBinarySearch.BinarySearch(searchedValue, lookupRange, true, new LookupComparer(LookupMatchMode.ExactMatchReturnNextSmaller), LookupRangeDirection.Vertical);
                 index = LookupBinarySearch.GetMatchIndex(index, lookupRange, LookupMatchMode.ExactMatchReturnNextSmaller, true);
