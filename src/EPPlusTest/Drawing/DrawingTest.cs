@@ -1180,7 +1180,20 @@ namespace EPPlusTest
 			pic = ws.Drawings.AddPicture("shape3", Resources.Test1);
 			pic.HorizontalFlip = true;
 			pic.SetPosition(30, 0, 10, 0);
-
 		}
+
+        [TestMethod]
+        public void AddTextBox()
+        {
+            using (var package = OpenPackage("TextBoxPackage.xlsx", true))
+            {
+                var wb = package.Workbook;
+                var ws = wb.Worksheets.Add("NewWs");
+
+                ws.Drawings.AddTextbox("TextboxName", "TextBoxContent");
+
+                SaveAndCleanup(package);
+            }
+        }
     }
 }
