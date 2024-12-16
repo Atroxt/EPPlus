@@ -10,26 +10,11 @@
  *************************************************************************************************
   04/15/2024         EPPlus Software AB       Initial release EPPlus 7.2
  *************************************************************************************************/
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Metadata;
-using OfficeOpenXml.FormulaParsing.FormulaExpressions;
-using System.Collections.Generic;
-
 namespace OfficeOpenXml.FormulaParsing.Excel.Functions.Text
 {
-    [FunctionMetadata(
-        Category = ExcelFunctionCategory.Text,
-        EPPlusVersion = "7.2",
-        Description = "Get the text before delimiter",
-        SupportsArrays = true)]
-    internal class TextBefore : TextDelimiterFunctionBase
+    internal enum DelimiterFunction
     {
-        public TextBefore(DelimiterFunction funcType) : base(funcType)
-        {
-        }
-
-        public override CompileResult Execute(IList<FunctionArgument> arguments, ParsingContext context)
-        {
-            return ProcessText(arguments);
-        }
+        TextBefore,
+        TextAfter
     }
 }

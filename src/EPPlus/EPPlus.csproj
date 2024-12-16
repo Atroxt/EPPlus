@@ -38,7 +38,7 @@
 			* Minor features and bug fixes.
 
 			## Version 7.4.1
-			* Updated for vulnerability in System.Text.Json - Microsoft.Extensions.Configuration.Json 8.0.0 -> 8.0.1
+			* Updated for vulnerability in System.Text.Json - Microsoft.Extensions.Configuration.Json 8.0.0 -&gt; 8.0.1
 
 			## Version 7.4.0
 			* Conditional formatting in Pivot Tables.
