@@ -1,18 +1,16 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using OfficeOpenXml;
 using OfficeOpenXml.FormulaParsing;
-using System.Globalization;
-using System.Threading;
-using System.IO;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
-using System.Security.Policy;
+using System.Linq;
+using System.Reflection;
 
 namespace EPPlusTest.Issues
 {
-	[TestClass]
+    [TestClass]
 	public class WorksheetIssues : TestBase
 	{
 		[ClassInitialize]
@@ -243,7 +241,7 @@ namespace EPPlusTest.Issues
 		[TestMethod]
 		public void s618()
 		{
-			ExcelPackage.LicenseContext = LicenseContext.Commercial;
+			ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.Commercial;
 
 			using (var package = OpenPackage("s618.xlsx", true))
 			{
@@ -567,7 +565,7 @@ namespace EPPlusTest.Issues
 
             List<int> add = new List<int>()
             {
-            4,9,15
+				4,9,15
             };
             using (ExcelPackage package = OpenTemplatePackage("s775.xlsx"))
             {
@@ -583,5 +581,30 @@ namespace EPPlusTest.Issues
                 package.Save();
             }
         }
+        private class I1782DataItem
+		{
+            public int Id { get; set; }
+            [DisplayName("Project Number")]
+            public ExcelHyperLink ProjectNumberUrl
+            {
+				get;
+				set;
+            }
+        }
+		[TestMethod]
+		public void i1782()
+		{
+			var list = new List<I1782DataItem>();
+			var hl = new ExcelHyperLink("https://epplussoftare.com", "epplussoftare.com");
+			list.Add(new I1782DataItem { Id = 1, ProjectNumberUrl = hl});
+
+			using var p = OpenPackage("i1782.xlsx",true);
+			var ws = p.Workbook.Worksheets.Add("sheet1");
+			ws.Cells["A1"].LoadFromCollection(list, true, OfficeOpenXml.Table.TableStyles.None, BindingFlags.Instance | BindingFlags.Public, new[] { typeof(I1782DataItem).GetProperty("Id"), typeof(I1782DataItem).GetProperty("ProjectNumberUrl") }   );
+
+			Assert.IsNotNull(ws.Cells["B2"].Hyperlink);
+
+            SaveAndCleanup(p);
+		}
     }
 }
