@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -620,5 +621,47 @@ namespace EPPlusTest.Issues
             renamedWorksheet.Name = "Renamed Worksheet";
 			SaveAndCleanup(p);
 		}
+
+		[TestMethod]
+		public void Issue1794_1()
+		{
+			// This tests creates a workbook without errors. When this workbook is opened in Excel
+			// and then closed without changing anything, Excel still shows a "Save changes" dialog.
+			// this seems to be related to that Excel renames the worksheet xml files.
+			// EPPlus keeps the sheet2.xml and sheet3.xml file names after the line p.Workbook.Worksheets.Delete(wsTemplate);
+			// this bug was fixed in Github Issue 1794 /MA
+
+			using var p = OpenTemplatePackage("Issue1794.xltx");
+            var wsTemplate = p.Workbook.Worksheets[0];
+
+            for (int i = 0; i < 2; i++)
+            {
+                var ws = p.Workbook.Worksheets.Add(i.ToString(), wsTemplate);
+                ws.View.SetTabSelected();      // avoids grouping
+            }
+            p.Workbook.Worksheets.Delete(wsTemplate);
+            SaveWorkbook("Issue1794_1_Output.xlsx", p);
+        }
+
+        [TestMethod]
+        public void Issue1794_2()
+        {
+            // This tests creates a workbook without errors. When this workbook is opened in Excel
+            // and then closed without changing anything, Excel still shows a "Save changes" dialog.
+            // this seems to be related to that Excel renames the worksheet xml files.
+            // EPPlus keeps the sheet2.xml and sheet3.xml file names after the line p.Workbook.Worksheets.Delete(wsTemplate);
+            // this bug was fixed in Github Issue 1794 /MA
+            using var p = OpenTemplatePackage("Issue1794.xlsx");
+            var wsTemplate = p.Workbook.Worksheets[0];
+
+            for (int i = 0; i < 2; i++)
+            {
+                var ws = p.Workbook.Worksheets.Add(i.ToString(), wsTemplate);
+                ws.View.SetTabSelected();      // avoids grouping
+            }
+			wsTemplate.View.SetTabSelected(false);
+            p.Workbook.Worksheets.Delete(wsTemplate);
+			SaveWorkbook("Issue1794_2_Output.xlsx", p);
+        }
     }
 }
