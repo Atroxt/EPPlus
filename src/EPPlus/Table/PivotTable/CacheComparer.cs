@@ -22,26 +22,30 @@ namespace OfficeOpenXml.Table.PivotTable
         {
 			x = GetCaseInsensitiveValue(x);
             y = GetCaseInsensitiveValue(y);
-			return x.Equals(y);           
+            return x.Equals(y);
 		}
 
         private static object GetCaseInsensitiveValue(object x)
         {
             if (x == null || x.Equals(ExcelPivotTable.PivotNullValue)) return ExcelPivotTable.PivotNullValue;
 
-			if (x is string sx)
+            if (x is string sx)
             {
-				return sx.ToLower();
-			}
+                return sx.ToLower();
+            }
             else if (x is char cx)
             {
                 return char.ToLower(cx).ToString();
             }
-            else if(x is DateTime)
+            else if (x is DateTime)
             {
                 return x;
             }
-            else if(x is TimeSpan ts)
+            else if (x is bool)
+            {
+                return x;
+            }
+            else if (x is TimeSpan ts)
             {
                 return DateTime.FromOADate(0).Add(ts);
             }
