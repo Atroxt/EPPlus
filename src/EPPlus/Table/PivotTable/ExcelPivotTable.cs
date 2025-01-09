@@ -456,7 +456,7 @@ namespace OfficeOpenXml.Table.PivotTable
                             }
                             else
                             {
-                                if(bool.TryParse(v.ToString(), out bool b))
+                                if(v != null && bool.TryParse(v.ToString(), out bool b))
                                 {
                                     if(cache.ContainsKey(b))
                                     {
