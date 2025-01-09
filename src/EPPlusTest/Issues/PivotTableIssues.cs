@@ -289,10 +289,6 @@ namespace EPPlusTest.Issues
                     {
                         foreach (var field in pTable.Fields)
                         {
-                            //if (field.SubTotalFunctions == eSubTotalFunctions.Default)
-                            //{
-                            //    field.SubTotalFunctions = eSubTotalFunctions.None;
-                            //}
                         }
                     }
                 }
