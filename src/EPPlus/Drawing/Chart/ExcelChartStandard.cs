@@ -81,12 +81,13 @@ namespace OfficeOpenXml.Drawing.Chart
         internal ExcelChartStandard(ExcelDrawings drawings, XmlNode node, Uri uriChart, ZipPackagePart part, XmlDocument chartXml, XmlNode chartNode, ExcelGroupShape parent, string drawingPath = "xdr:graphicFrame", string nvPrPath = "xdr:nvGraphicFramePr/xdr:cNvPr") :
            base(drawings, node, chartXml, parent, drawingPath, nvPrPath)
         {
-            var ptSource = _chartXmlHelper.GetXmlNodeString("c:pivotSource/c:name");
-            if (!string.IsNullOrEmpty(ptSource))
+            var originalPtSource = _chartXmlHelper.GetXmlNodeString("c:pivotSource/c:name");
+            if (!string.IsNullOrEmpty(originalPtSource))
             {
+                var ptSource = originalPtSource;
                 if (ptSource.StartsWith("["))
                 {
-                    ptSource = ptSource.Substring(ptSource.IndexOf("]") + 1);
+                    ptSource = originalPtSource.Substring(originalPtSource.IndexOf("]") + 1);
                 }
                 var wsName = ExcelAddressBase.GetWorksheetPart(ptSource, "");
                 var ws = drawings.Worksheet.Workbook.Worksheets[wsName];
@@ -94,9 +95,17 @@ namespace OfficeOpenXml.Drawing.Chart
                 {
                     var ptName = ptSource.Substring(ptSource.LastIndexOf("!") + 1);
                     PivotTableSource = ws.PivotTables[ptName];
-                    _chartXmlHelper.SetXmlNodeString("c:pivotSource/c:name", "[]" + ptSource);
+                    if (PivotTableSource == null)
+                    {
+                        _chartXmlHelper.SetXmlNodeString("c:pivotSource/c:name", originalPtSource);
+                    }
+                    else
+                    {
+                        _chartXmlHelper.SetXmlNodeString("c:pivotSource/c:name", ptSource);
+                    }
                 }
             }
+
             UriChart = uriChart;
             Part = part;
             ChartXml = chartXml;

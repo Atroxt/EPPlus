@@ -456,7 +456,21 @@ namespace OfficeOpenXml.Table.PivotTable
                             }
                             else
                             {
-                                return ErrorValues.RefError;
+                                if(v != null && bool.TryParse(v.ToString(), out bool b))
+                                {
+                                    if(cache.ContainsKey(b))
+                                    {
+                                        key[i] = cache[b];
+                                    }
+                                    else
+                                    {
+                                        return ErrorValues.RefError;
+                                    }
+                                }
+                                else
+                                {
+                                    return ErrorValues.RefError;
+                                }
                             }
                         }
                         break;
@@ -1724,7 +1738,7 @@ namespace OfficeOpenXml.Table.PivotTable
                         name = df.Function.ToString() + " of " + df.Field.Name; //Name must be set or Excel will crash on rename.
                     }
 
-                    //Make sure name is unique
+
                     var newName = name;
                     var i = 2;
                     while (DataFields.ExistsDfName(newName, df))
