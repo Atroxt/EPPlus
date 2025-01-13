@@ -136,38 +136,11 @@ namespace OfficeOpenXml.FormulaParsing.Excel.Functions.MathFunctions
             else
             {
                 var rows = nextRow - row-1;
-                var cells = cse._endCol-col+add;
+                var cells = cse._endCol - col + add;               //Add a cell for the first item in a range. 
                 cells += nextCol - cse._startCol;
-                cells += rows * (cse._endCol - cse._startCol+1);
+                cells += rows * (cse._endCol - cse._startCol + 1);
                 return cells;
             }
-        }
-
-        private double CountOutsideDimensionCells(IRangeInfo ri)
-        {
-            ExcelRangeBase dim = ri.Worksheet.Dimension;
-            var adr = ri.Address;
-            int r = 0, c = 0;
-
-            if (adr.FromRow < dim._fromRow)
-            {
-                r = adr.FromRow - dim._fromRow;
-            }
-            if(adr.ToRow > dim._toRow)
-            {
-                r += dim._toRow - adr.ToRow;
-            }
-
-            if (adr.FromCol < dim._fromCol)
-            {
-                c = adr.FromCol - dim._fromCol;
-            }
-            if (adr.ToCol > dim._toCol)
-            {
-                c += dim._toCol - adr.ToCol;
-            }
-
-            return (r * (c + 1)) + (c * (r + 1));
         }
 
         public override ExcelFunctionParametersInfo ParametersInfo => new ExcelFunctionParametersInfo(new Func<int, FunctionParameterInformation>((argumentIndex) =>
