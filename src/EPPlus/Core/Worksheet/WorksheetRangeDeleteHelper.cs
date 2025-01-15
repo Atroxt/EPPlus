@@ -16,6 +16,7 @@ using OfficeOpenXml.Core.CellStore;
 using OfficeOpenXml.DataValidation;
 using OfficeOpenXml.DataValidation.Formulas.Contracts;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup;
+using OfficeOpenXml.Sorting.Internal;
 using OfficeOpenXml.Sparkline;
 using OfficeOpenXml.Table;
 using OfficeOpenXml.Table.PivotTable;
@@ -44,7 +45,6 @@ namespace OfficeOpenXml.Core.Worksheet
                     FixFormulasDeleteRow(wsToUpdate, rowFrom, rows, ws.Name);
                 }
 
-
                 WorksheetRangeHelper.FixMergedCellsRow(ws, rowFrom, rows, true);
 
                 DeleteRowTable(ws, rowFrom, rows);
@@ -52,6 +52,7 @@ namespace OfficeOpenXml.Core.Worksheet
 
                 var range = ws.Cells[rowFrom, 1, rowFrom + rows - 1, ExcelPackage.MaxColumns];
                 var effectedAddress = GetAffectedRange(range, eShiftTypeDelete.Up);
+
                 DeleteDataValidations(range, eShiftTypeDelete.Up, ws, effectedAddress);
                 DeleteConditionalFormatting(range, eShiftTypeDelete.Up, ws, effectedAddress);
                 DeleteFilterAddress(range, effectedAddress, eShiftTypeDelete.Up);
