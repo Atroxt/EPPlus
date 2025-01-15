@@ -338,6 +338,14 @@ namespace EPPlusTest
 
             SaveAndCleanup(p);
         }
+        [TestMethod]
+        public void I1815()
+        {
+            using var p = OpenTemplatePackage("i1815.xlsx");
+            ExcelWorksheet ws = p.Workbook.Worksheets["Sheet1"];
+            Assert.AreEqual(1, p.Workbook.Styles.Fonts.Count);
+            SaveAndCleanup(p);
+        }
 
         public class TestData
         {
