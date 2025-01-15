@@ -1659,7 +1659,7 @@ namespace OfficeOpenXml
                             _formulas.SetValue(address._fromRow, address._fromCol, sfIndex);
                             SetValueInner(address._fromRow, address._fromCol, null);
                             string fAddress = xr.GetAttribute("ref");
-                            string formula = ConvertUtil.ExcelDecodeString(xr.ReadElementContentAsString());
+                            string formula =xr.ReadElementContentAsString();
                             if (formula != "")
                             {
                                 _sharedFormulas.Add(sfIndex, new SharedFormula(this, row, col, fAddress, formula) { Index = sfIndex, FormulaType=FormulaType.Shared });
@@ -2444,13 +2444,13 @@ namespace OfficeOpenXml
             }
         }
 #region Worksheet Save
-        internal void Save()
+        internal void Save(bool hasLoadedPivotTables)
         {
             DeletePrinterSettings();
 
             if (_worksheetXml != null)
             {
-                SaveDrawings();
+                SaveDrawings(hasLoadedPivotTables);
                 if (!(this is ExcelChartsheet))
                 {
                     // save the header & footer (if defined)
@@ -2479,7 +2479,7 @@ namespace OfficeOpenXml
                     SaveThreadedComments();
                     HeaderFooter.SaveHeaderFooterImages();
                     SaveTables();
-                    if(HasLoadedPivotTables) SavePivotTables();
+                    if(hasLoadedPivotTables) SavePivotTables();
                     SaveSlicers();
 
                     //Meta data and rich data is currently used for #spill! and #calc! errors.
@@ -2492,7 +2492,7 @@ namespace OfficeOpenXml
             }
         }
 
-        private void SaveDrawings()
+        private void SaveDrawings(bool hasLoadedPivotTables)
         {
             if (Drawings.UriDrawing != null)
             {
@@ -2508,7 +2508,7 @@ namespace OfficeOpenXml
                     {
                         d.AdjustPositionAndSize();
                         d.UpdatePositionAndSizeXml();
-                        HandleSaveForIndividualDrawings(d);
+                        HandleSaveForIndividualDrawings(d, hasLoadedPivotTables);
                     }
                     Packaging.ZipPackagePart partPack = Drawings.Part;
                     var stream = partPack.GetStream(FileMode.Create, FileAccess.Write);
@@ -2520,7 +2520,7 @@ namespace OfficeOpenXml
             }
         }
 
-        private static void HandleSaveForIndividualDrawings(ExcelDrawing d)
+        private static void HandleSaveForIndividualDrawings(ExcelDrawing d, bool hasLoadedPivotTables)
         {
             if (d is ExcelChart c)
             {
@@ -2535,7 +2535,10 @@ namespace OfficeOpenXml
             else if (d is ExcelSlicer<ExcelPivotTableSlicerCache> p)
             {
                 if (p.Cache == null) return;
-                p.Cache.UpdateItemsXml();
+                if(hasLoadedPivotTables)
+                {
+                    p.Cache.UpdateItemsXml();
+                }
                 p.Cache.SlicerCacheXml.Save(p.Cache.Part.GetStream(FileMode.Create, FileAccess.Write));
             }
             else if (d is ExcelControl ctrl)
@@ -2547,7 +2550,7 @@ namespace OfficeOpenXml
             {
                 foreach (var sd in grp.Drawings)
                 {
-                    HandleSaveForIndividualDrawings(sd);
+                    HandleSaveForIndividualDrawings(sd, hasLoadedPivotTables);
                 }
             }
         }
