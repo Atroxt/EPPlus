@@ -346,6 +346,22 @@ namespace EPPlusTest
             Assert.AreEqual(1, p.Workbook.Styles.Fonts.Count);
             SaveAndCleanup(p);
         }
+        [TestMethod]
+        public void s1808()
+        {
+            using var p = OpenTemplatePackage("s802-2.xlsx");
+            ExcelWorksheet ws = p.Workbook.Worksheets["StyleSheet"];
+            //p.Workbook.Worksheets.Add("Copied Sheet", ws);
+            SaveAndCleanup(p);
+        }
+        [TestMethod]
+        public void s1808_2()
+        {
+            using var p = OpenTemplatePackage("wordwrap_style.xlsx");
+            ExcelWorksheet ws = p.Workbook.Worksheets["StyleSheet"];
+            //p.Workbook.Worksheets.Add("Copied Sheet", ws);
+            SaveAndCleanup(p);
+        }
 
         public class TestData
         {
