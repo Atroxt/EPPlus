@@ -107,12 +107,6 @@ namespace OfficeOpenXml.Core.Worksheet
                 CopyPivotTable(sourceWorksheet, targetWorksheet);
             }
 
-            //Copy dfx styles used in conditional formatting.
-            if (!(sourceWorksheet.Workbook == targetWorksheet.Workbook))
-            {
-                CopyDxfStyles(sourceWorksheet, targetWorksheet);
-            }
-
             if (sourceWorksheet.Names.Count > 0)
             {
                 CopySheetNames(sourceWorksheet, targetWorksheet);
@@ -130,6 +124,12 @@ namespace OfficeOpenXml.Core.Worksheet
                 {
                     targetWorksheet.ConditionalFormatting.CopyRule(sourceWorksheet.ConditionalFormatting[i]);
                 }
+            }
+
+            //Copy dfx styles used in conditional formatting.
+            if (!(sourceWorksheet.Workbook == targetWorksheet.Workbook))
+            {
+                CopyDxfStyles(sourceWorksheet, targetWorksheet);
             }
 
             //Copy the VBA code
