@@ -362,7 +362,13 @@ namespace EPPlusTest
             //p.Workbook.Worksheets.Add("Copied Sheet", ws);
             SaveAndCleanup(p);
         }
-
+        [TestMethod]
+        public void i1839()
+        {
+            using var p = OpenTemplatePackage("i1839.xlsx");
+            Assert.AreEqual(288, p.Workbook.Worksheets[0].Cells["E31"].StyleID);
+            SaveWorkbook("i1839-saved.xlsx", p);
+        }
         public class TestData
         {
             public int Id { get; set; }
